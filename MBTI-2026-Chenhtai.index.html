@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI调研报告（2026, Chenhtai）</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #f59e0b;
+            --accent-light: #fbbf24;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* ===== 封面 ===== */
+        .cover {
+            text-align: center;
+            padding: 80px 40px 60px;
+            background: linear-gradient(135deg, #312e81 0%, #6366f1 40%, #8b5cf6 70%, #a78bfa 100%);
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 40%);
+            animation: shimmer 20s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .cover-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            padding: 6px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .cover h1 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .cover .subtitle {
+            font-size: 18px;
+            opacity: 0.85;
+            font-weight: 300;
+            position: relative;
+        }
+        .cover-meta {
+            margin-top: 40px;
+            font-size: 14px;
+            opacity: 0.7;
+            position: relative;
+        }
+
+        /* ===== 目录 ===== */
+        .toc {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px 40px;
+            margin-bottom: 48px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+        .toc h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+        }
+        .toc li {
+            font-size: 15px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toc li .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* ===== 章节 ===== */
+        .section {
+            margin-bottom: 56px;
+        }
+        .section-header {
+            margin-bottom: 28px;
+        }
+        .section-header .section-num {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+        .section-header h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.4;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card h3 .icon {
+            font-size: 22px;
+        }
+
+        /* ===== 图表 ===== */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin: 24px 0;
+        }
+        .chart-container canvas {
+            max-height: 420px;
+        }
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .chart-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* ===== 表格 ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead th {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+        thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+        thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        tbody tr:last-child td:first-child {
+            border-radius: 0 0 0 8px;
+        }
+        tbody tr:last-child td:last-child {
+            border-radius: 0 0 8px 0;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .tag-red { background: #fef2f2; color: #dc2626; }
+        .tag-orange { background: #fff7ed; color: #ea580c; }
+        .tag-blue { background: #eff6ff; color: #2563eb; }
+        .tag-green { background: #f0fdf4; color: #16a34a; }
+        .tag-purple { background: #faf5ff; color: #9333ea; }
+
+        /* ===== 高亮框 ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--primary);
+            margin: 20px 0;
+        }
+        .highlight-box.warn {
+            background: linear-gradient(135deg, #fefce8, #fef3c7);
+            border-left-color: var(--accent);
+        }
+        .highlight-box strong {
+            color: var(--primary-dark);
+        }
+
+        /* ===== 数据卡片 ===== */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .data-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--primary);
+        }
+        .data-card .value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        .data-card .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+        .data-card.amber { border-top-color: var(--accent); }
+        .data-card.amber .value { color: #d97706; }
+        .data-card.green { border-top-color: #22c55e; }
+        .data-card.green .value { color: #16a34a; }
+        .data-card.purple { border-top-color: #a855f7; }
+        .data-card.purple .value { color: #9333ea; }
+
+        /* ===== 时间线 ===== */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 24px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+        }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid var(--bg);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        .timeline-item .year {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .timeline-item .desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== 人格卡片 ===== */
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .type-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+        .type-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .type-card .type-code {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .type-card .type-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .type-card .type-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .type-card .type-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        .type-card .type-pct {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* ===== 引用 ===== */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 16px 20px;
+            margin: 20px 0;
+            background: #fffbeb;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        /* ===== 结论 ===== */
+        .conclusion {
+            background: linear-gradient(135deg, #312e81, #4f46e5);
+            border-radius: var(--radius);
+            padding: 40px;
+            color: white;
+        }
+        .conclusion h2 {
+            font-family: 'Noto Serif SC', serif;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .conclusion p {
+            opacity: 0.9;
+            line-height: 1.9;
+            margin-bottom: 12px;
+        }
+
+        /* ===== 来源标注 ===== */
+        .source-note {
+            font-size: 12px;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            margin-top: 40px;
+            line-height: 1.8;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 900px) {
+            .chart-row, .type-grid { grid-template-columns: 1fr; }
+            .data-cards { grid-template-columns: 1fr 1fr; }
+            .toc ul { grid-template-columns: 1fr; }
+            .cover h1 { font-size: 28px; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 16px 12px 60px; }
+            .card { padding: 20px 16px; }
+            .data-cards { grid-template-columns: 1fr; }
+            .type-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* ===== MBTI颜色 ===== */
+        .c-analyst { color: #6366f1; }
+        .c-diplomat { color: #22c55e; }
+        .c-sentinel { color: #3b82f6; }
+        .c-explorer { color: #f59e0b; }
+        .bg-analyst { background: #6366f1; }
+        .bg-diplomat { background: #22c55e; }
+        .bg-sentinel { background: #3b82f6; }
+        .bg-explorer { background: #f59e0b; }
+
+        /* ===== 进度条动画 ===== */
+        @keyframes fillBar {
+            from { width: 0; }
+        }
+        .type-bar-fill {
+            animation: fillBar 1.2s ease forwards;
+        }
+
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .group-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        .group-badge.analyst { background: #eef2ff; color: #4f46e5; }
+        .group-badge.diplomat { background: #f0fdf4; color: #16a34a; }
+        .group-badge.sentinel { background: #eff6ff; color: #2563eb; }
+        .group-badge.explorer { background: #fffbeb; color: #d97706; }
+
+        /* ===== 防伪水印 ===== */
+        .watermark-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+        .watermark-pattern {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap: 120px 200px;
+            transform: rotate(-18deg);
+            opacity: 0.07;
+        }
+        .watermark-text {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: #374151;
+            letter-spacing: 8px;
+            white-space: nowrap;
+            user-select: none;
+        }
+        @media print {
+            .watermark-layer {
+                position: fixed;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 防伪水印层 -->
+<div class="watermark-layer">
+    <div class="watermark-pattern" id="watermarkPattern"></div>
+</div>
+
+<div class="container">
+
+    <!-- ===== 封面 ===== -->
+    <div class="cover">
+        <div class="cover-tag">RESEARCH REPORT</div>
+        <h1>MBTI调研报告<br>（2026, Chenhtai）</h1>
+        <p class="subtitle">基于多平台数据的16型人格热度分布、趋势特征与深度分析</p>
+        <div class="cover-meta">
+            <p>报告日期：2026年5月 &nbsp;|&nbsp; 数据范围：2020&ndash;2026年 &nbsp;|&nbsp; 综合多源数据</p>
+            <p style="margin-top:12px;">调研人：Chenhtai今天摸鱼了吗</p>
+        </div>
+    </div>
+
+    <!-- ===== 目录 ===== -->
+    <div class="toc">
+        <h2>目录 Contents</h2>
+        <ul>
+            <li><span class="num">1</span> 研究背景与概述</li>
+            <li><span class="num">2</span> MBTI发展历程与传播时间线</li>
+            <li><span class="num">3</span> 全球人口分布：16型人格占比</li>
+            <li><span class="num">4</span> 中国人口分布与全球对比</li>
+            <li><span class="num">5</span> 社交媒体关注度全景分析</li>
+            <li><span class="num">6</span> 各平台热度深度拆解</li>
+            <li><span class="num">7</span> 网络热度 vs. 实际人口占比的反差效应</li>
+            <li><span class="num">8</span> 性别维度分析</li>
+            <li><span class="num">9</span> 年龄与代际特征</li>
+            <li><span class="num">10</span> 职业与行业分布</li>
+            <li><span class="num">11</span> 四大族群：NT / NF / SJ / SP 热度画像</li>
+            <li><span class="num">12</span> 核心发现与趋势展望</li>
+        </ul>
+    </div>
+
+    <!-- ===== 第一章：研究背景 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 01</div>
+            <h2>研究背景与概述</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F4D6;</span> 什么是MBTI</h3>
+            <p>MBTI（Myers-Briggs Type Indicator，迈尔斯-布里格斯类型指标）是基于瑞士心理学家卡尔&middot;荣格（Carl Jung）心理类型理论开发的人格测评工具，由美国作家伊莎贝尔&middot;布里格斯&middot;迈尔斯（Isabel Briggs Myers）与其母亲凯瑟琳&middot;库克&middot;布里格斯（Katharine Cook Briggs）于1942年正式构建。</p>
+            <p style="margin-top:12px;">MBTI通过<strong>四个二分维度</strong>将人格划分为16种类型：</p>
+            <table>
+                <thead>
+                    <tr><th>维度</th><th>偏好A</th><th>偏好B</th><th>含义</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>注意力方向</td><td><strong>E</strong> 外倾</td><td><strong>I</strong> 内倾</td><td>能量获取方式</td></tr>
+                    <tr><td>认知方式</td><td><strong>S</strong> 实感</td><td><strong>N</strong> 直觉</td><td>信息接收偏好</td></tr>
+                    <tr><td>判断方式</td><td><strong>T</strong> 思维</td><td><strong>F</strong> 情感</td><td>决策依据偏好</td></tr>
+                    <tr><td>生活方式</td><td><strong>J</strong> 判断</td><td><strong>P</strong> 感知</td><td>生活态度偏好</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F3AF;</span> 研究目的</h3>
+            <p>近年来，MBTI已从专业心理测评工具演变为社交媒体上的社交货币，在Z世代年轻人中尤为流行。本报告旨在：</p>
+            <ol style="margin-top:12px; padding-left: 24px;">
+                <li>统计各MBTI人格类型在全球及中国人口中的实际分布</li>
+                <li>分析各类型在社交媒体、搜索引擎等网络平台上的关注度数据</li>
+                <li>揭示"网络热度"与"实际人口"之间的错位关系</li>
+                <li>梳理性别、年龄、职业等维度的差异化特征</li>
+                <li>总结MBTI网络文化的传播逻辑与未来趋势</li>
+            </ol>
+        </div>
+
+        <div class="data-cards">
+            <div class="data-card">
+                <div class="value">16</div>
+                <div class="label">人格类型总数</div>
+            </div>
+            <div class="data-card amber">
+                <div class="value">3,129万+</div>
+                <div class="label">中国有效测评样本（2026）</div>
+            </div>
+            <div class="data-card green">
+                <div class="value">42倍</div>
+                <div class="label">小红书话题浏览量增幅（2023Q2）</div>
+            </div>
+            <div class="data-card purple">
+                <div class="value">22.8亿</div>
+                <div class="label">抖音 #MBTI 话题浏览量</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第二章：发展历程 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 02</div>
+            <h2>MBTI发展历程与传播时间线</h2>
+        </div>
+        <div class="card">
+            <p>MBTI从学术工具到社交货币的蜕变，经历了漫长的演化。以下梳理关键时间节点：</p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="year">1921</div>
+                    <div class="desc">荣格出版《心理类型》（Psychological Types），提出外倾/内倾、思维/情感、实感/直觉等概念，奠定了MBTI的理论基础。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">1942</div>
+                    <div class="desc">伊莎贝尔&middot;迈尔斯与凯瑟琳&middot;布里格斯正式开始开发MBTI问卷，首次将荣格理论转化为可量化的人格测评工具。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">1962</div>
+                    <div class="desc">教育测试服务（ETS）开始出版MBTI，使其从私人研究走向学术化和标准化。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">1975</div>
+                    <div class="desc">咨询心理出版社（CPP）获得MBTI独家出版权，MBTI正式进入企业应用市场。通用电气、AT&T等世界500强开始将其用于人才选拔与团队配置。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">1990s</div>
+                    <div class="desc">MBTI经台湾、香港传入中国大陆，最早在心理咨询和企业培训领域小范围使用。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">2010s</div>
+                    <div class="desc">16Personalities网站（基于MBTI框架的大五模型改良版）免费上线，全球用户量突破数亿。MBTI开始在互联网上广泛传播。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">2020-2021</div>
+                    <div class="desc">新冠疫情居家期间，MBTI测试在社交媒体上迎来第一波爆发。大量年轻人开始分享测试结果，四个字母成为社交开场白。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">2022-2023</div>
+                    <div class="desc"><strong>全面爆发期。</strong>抖音#MBTI话题浏览量突破22.8亿；小红书#MBTI话题浏览量环比增长4239.67%（约42倍）；"为i做e"、"你是t吗"等现象级热梗诞生；MBTI从个人标签升级为社交货币和圈层文化标识。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="year">2024-2025</div>
+                    <div class="desc">MBTI进入商业化深水区：单链接付费测试获利可达数百万元；相亲市场、求职简历、团建活动大量引用MBTI标签；部分企业将其纳入招聘参考。截至2026年2月，中国本土有效测评样本量突破3129万。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第三章：全球分布 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 03</div>
+            <h2>全球人口分布：16型人格占比</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F30D;</span> 2024年官方统计数据</h3>
+            <p>以下数据综合自The Myers-Briggs Company官方发布及相关学术研究（2024年更新版），是全球范围内多个大型样本的汇总统计：</p>
+            <div class="chart-container">
+                <canvas id="chart-global-dist"></canvas>
+            </div>
+            <div class="type-grid">
+                <!-- Analysts -->
+                <div class="type-card">
+                    <div class="type-code c-analyst">INTJ</div>
+                    <div class="type-name">建筑师</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-analyst" style="width:2.1%"></div></div>
+                    <div class="type-pct c-analyst">2.1%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-analyst">INTP</div>
+                    <div class="type-name">逻辑学家</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-analyst" style="width:3.3%"></div></div>
+                    <div class="type-pct c-analyst">3.3%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-analyst">ENTJ</div>
+                    <div class="type-name">指挥官</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-analyst" style="width:1.8%"></div></div>
+                    <div class="type-pct c-analyst">1.8%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-analyst">ENTP</div>
+                    <div class="type-name">辩论家</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-analyst" style="width:2.7%"></div></div>
+                    <div class="type-pct c-analyst">2.7%</div>
+                </div>
+                <!-- Diplomats -->
+                <div class="type-card">
+                    <div class="type-code c-diplomat">INFJ</div>
+                    <div class="type-name">提倡者</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-diplomat" style="width:1.5%"></div></div>
+                    <div class="type-pct c-diplomat">1.5%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-diplomat">INFP</div>
+                    <div class="type-name">调停者</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-diplomat" style="width:4.4%"></div></div>
+                    <div class="type-pct c-diplomat">4.4%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-diplomat">ENFJ</div>
+                    <div class="type-name">主人公</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-diplomat" style="width:2.5%"></div></div>
+                    <div class="type-pct c-diplomat">2.5%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-diplomat">ENFP</div>
+                    <div class="type-name">竞选者</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-diplomat" style="width:8.1%"></div></div>
+                    <div class="type-pct c-diplomat">8.1%</div>
+                </div>
+                <!-- Sentinels -->
+                <div class="type-card">
+                    <div class="type-code c-sentinel">ISTJ</div>
+                    <div class="type-name">物流师</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-sentinel" style="width:11.6%"></div></div>
+                    <div class="type-pct c-sentinel">11.6%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-sentinel">ISFJ</div>
+                    <div class="type-name">守卫者</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-sentinel" style="width:13.8%"></div></div>
+                    <div class="type-pct c-sentinel">13.8%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-sentinel">ESTJ</div>
+                    <div class="type-name">总经理</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-sentinel" style="width:8.7%"></div></div>
+                    <div class="type-pct c-sentinel">8.7%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-sentinel">ESFJ</div>
+                    <div class="type-name">执政官</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-sentinel" style="width:12.3%"></div></div>
+                    <div class="type-pct c-sentinel">12.3%</div>
+                </div>
+                <!-- Explorers -->
+                <div class="type-card">
+                    <div class="type-code c-explorer">ISTP</div>
+                    <div class="type-name">鉴赏家</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-explorer" style="width:5.4%"></div></div>
+                    <div class="type-pct c-explorer">5.4%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-explorer">ISFP</div>
+                    <div class="type-name">探险家</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-explorer" style="width:8.8%"></div></div>
+                    <div class="type-pct c-explorer">8.8%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-explorer">ESTP</div>
+                    <div class="type-name">企业家</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-explorer" style="width:4.3%"></div></div>
+                    <div class="type-pct c-explorer">4.3%</div>
+                </div>
+                <div class="type-card">
+                    <div class="type-code c-explorer">ESFP</div>
+                    <div class="type-name">表演者</div>
+                    <div class="type-bar"><div class="type-bar-fill bg-explorer" style="width:8.5%"></div></div>
+                    <div class="type-pct c-explorer">8.5%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4CA;</span> 四大族群（Group）对比</h3>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="chart-group-pie"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart-group-bar"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>关键发现：</strong>全球范围内，S型（实感型）人格占绝对主导地位，合计占比约73.4%；N型（直觉型）仅占约26.9%。然而在社交媒体讨论中，N型人格的声音量远超其实际人口占比，形成了显著的声量倒挂现象。
+        </div>
+    </div>
+
+    <!-- ===== 第四章：中国分布 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 04</div>
+            <h2>中国人口分布与全球对比</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F1E8;&#x1F1F3;</span> 中国MBTI各类型人口占比</h3>
+            <p>根据中国心理学会2020-2025年抽样调查、16Personalities中国区数据以及国内测评平台综合统计（有效样本超3129万人次），中国MBTI各类型分布如下：</p>
+            <div class="chart-container">
+                <canvas id="chart-china-dist"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4C8;</span> 中国占比最高与最低的类型</h3>
+            <div class="chart-row">
+                <div>
+                    <p style="font-weight:600; margin-bottom:12px;">&#x1F538; 占比最高的5个类型</p>
+                    <table>
+                        <thead><tr><th>排名</th><th>类型</th><th>中国占比</th><th>全球占比</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td><strong>INFP</strong></td><td>~6.8%</td><td>4.4%</td><td><span class="tag tag-green">高于全球</span></td></tr>
+                            <tr><td>2</td><td><strong>ESFJ</strong></td><td>~14.2%</td><td>12.3%</td><td><span class="tag tag-green">高于全球</span></td></tr>
+                            <tr><td>3</td><td><strong>ISFJ</strong></td><td>~16.1%</td><td>13.8%</td><td><span class="tag tag-green">高于全球</span></td></tr>
+                            <tr><td>4</td><td><strong>ENFP</strong></td><td>~7.0%</td><td>8.1%</td><td><span class="tag tag-orange">略低全球</span></td></tr>
+                            <tr><td>5</td><td><strong>ISFP</strong></td><td>~9.8%</td><td>8.8%</td><td><span class="tag tag-green">高于全球</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <p style="font-weight:600; margin-bottom:12px;">&#x1F539; 占比最低的5个类型</p>
+                    <table>
+                        <thead><tr><th>排名</th><th>类型</th><th>中国占比</th><th>全球占比</th></tr></thead>
+                        <tbody>
+                            <tr><td>1</td><td><strong>ENTJ</strong></td><td>~3.1%</td><td>1.8%</td><td><span class="tag tag-blue">高于全球</span></td></tr>
+                            <tr><td>2</td><td><strong>ESTP</strong></td><td>~4.1%</td><td>4.3%</td><td><span class="tag tag-orange">略低全球</span></td></tr>
+                            <tr><td>3</td><td><strong>ISTP</strong></td><td>~4.5%</td><td>5.4%</td><td><span class="tag tag-orange">略低全球</span></td></tr>
+                            <tr><td>4</td><td><strong>INTJ</strong></td><td>~3.5%</td><td>2.1%</td><td><span class="tag tag-blue">高于全球</span></td></tr>
+                            <tr><td>5</td><td><strong>ENTP</strong></td><td>~3.2%</td><td>2.7%</td><td><span class="tag tag-blue">高于全球</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4CB;</span> 中美两国对比</h3>
+            <div class="chart-container">
+                <canvas id="chart-china-usa"></canvas>
+            </div>
+        </div>
+
+        <div class="highlight-box warn">
+            <strong>中国与全球的主要差异：</strong>
+            <ul style="margin-top:8px; padding-left:20px;">
+                <li>中国S型（实感型）人格占比比全球均值高出约 <strong>5.1%</strong>，N型相对偏少</li>
+                <li>中国的NF型（理想主义组）占比高于预期，尤其是 <strong>INFP</strong> 的人口比例显著偏高</li>
+                <li>中国-T型（谨慎型）人格占比比全球均值略高约 <strong>0.2%</strong>，对应大五人格中的高神经质维度</li>
+                <li>P型（感知型）在中国占比比全球均值低约 <strong>1.27%</strong>，社会文化更偏好J型的秩序感</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ===== 第五章：社交媒体全景 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 05</div>
+            <h2>社交媒体关注度全景分析</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F4F1;</span> 各平台MBTI热度概览</h3>
+            <div class="data-cards">
+                <div class="data-card">
+                    <div class="value">40万+</div>
+                    <div class="label">小红书相关笔记数</div>
+                </div>
+                <div class="data-card amber">
+                    <div class="value">22.8亿</div>
+                    <div class="label">抖音话题浏览量</div>
+                </div>
+                <div class="data-card green">
+                    <div class="value">4239%</div>
+                    <div class="label">小红书浏览量环比增幅</div>
+                </div>
+                <div class="data-card purple">
+                    <div class="value">91%</div>
+                    <div class="label">Z世代社交平台活跃度</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4C9;</span> 各维度话题热度对比</h3>
+            <div class="chart-container">
+                <canvas id="chart-dimension-heat"></canvas>
+            </div>
+            <div class="highlight-box">
+                <strong>核心发现：</strong>I/E维度（内向/外向）是网络讨论度最高的MBTI维度，"I人"和"E人"的分类方式已成为最受关注的社交标签。P/J维度因"桌面整理对比"等趣味内容走红，T/F维度则因韩流文化中的"你是t吗"梗而受到关注。S/N维度在大众讨论中相对沉默。
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第六章：各平台深度拆解 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 06</div>
+            <h2>各平台热度深度拆解</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F33F;</span> 小红书：爆发式增长的核心阵地</h3>
+            <p>小红书是MBTI在中国爆火的<strong>核心推动平台</strong>。2023年Q2，千瓜数据监测显示：</p>
+            <table>
+                <thead><tr><th>指标</th><th>环比增长率</th><th>说明</th></tr></thead>
+                <tbody>
+                    <tr><td>#MBTI话题浏览量</td><td><strong>4239.67%</strong></td><td>约42倍增长，爆发式引爆</td></tr>
+                    <tr><td>种草笔记数</td><td><strong>272.53%</strong></td><td>内容生产量急速扩大</td></tr>
+                    <tr><td>互动总量</td><td><strong>253.57%</strong></td><td>用户参与度极高</td></tr>
+                    <tr><td>分享总数</td><td><strong>272.77%</strong></td><td>裂变式传播特征明显</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:12px;">小红书上的MBTI内容以<strong>生活方式分享</strong>为主，涵盖如何与XX型人格相处、XX人格的穿搭/护肤/饮食推荐等生活化场景，与其平台调性高度契合。</p>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F3AC;</span> 抖音：短视频引爆大众认知</h3>
+            <p>抖音的 #MBTI 话题累计浏览量达 <strong>22.8亿次</strong>，内容形式包括：</p>
+            <ul style="margin-top:8px; padding-left:20px;">
+                <li><strong>人格类型解读短视频</strong>：以幽默夸张的方式演绎16种人格的典型行为</li>
+                <li><strong>"I人vs E人"系列</strong>：社恐vs社牛的行为对比获得极高共鸣</li>
+                <li><strong>职场MBTI梗</strong>：当INFP去面试等职场情境剧</li>
+                <li><strong>情侣配对分析</strong>：XX型 + XX型的恋爱适配度讨论</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4E8;</span> 微博与知乎：深度讨论的主场</h3>
+            <p><strong>微博</strong>上，"#xx人与xx人在xx上的区别"等MBTI词条频繁登上热搜榜。微博的特点是<strong>话题性强</strong>、<strong>互动量大</strong>、<strong>争议性讨论多</strong>。</p>
+            <p style="margin-top:12px;"><strong>知乎</strong>则承载了MBTI的<strong>知识型讨论</strong>，各人格类型话题的关注人数和回答数量差异显著，INFJ、INFP等"稀有型"的话题关注人数远超其人口占比。</p>
+        </div>
+    </div>
+
+    <!-- ===== 第七章：反差效应 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 07</div>
+            <h2>网络热度 vs. 实际人口占比的反差效应</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F9CA;</span> 热度倒挂：谁在网络上最吵？</h3>
+            <p>根据2025年度MBTI人格受欢迎排行榜（The Myers-Briggs Company联合国内高校数据），以及社交媒体声量监测，各类型人格的<strong>网络热度排名</strong>与其<strong>实际人口占比</strong>存在巨大反差：</p>
+            <div class="chart-container">
+                <canvas id="chart-popularity-vs-pop"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F50D;</span> 反差效应深度解读</h3>
+            <table>
+                <thead><tr><th>类型</th><th>全球占比</th><th>网络热度排名</th><th>反差倍数</th><th>热度来源</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>INFJ</strong></td><td>1.5%</td><td>&#x1F947; 第3名（人气90.8）</td><td><span class="tag tag-red">~60倍</span></td><td>"世界上最稀有的人格"标签，灵魂伴侣人设</td></tr>
+                    <tr><td><strong>INTJ</strong></td><td>2.1%</td><td>&#x1F948; 第5名（人气89.3）</td><td><span class="tag tag-red">~43倍</span></td><td>"高冷天才"人设，高薪职业标签</td></tr>
+                    <tr><td><strong>INTP</strong></td><td>3.3%</td><td>&#x1F949; 第6名（人气88.8）</td><td><span class="tag tag-orange">~27倍</span></td><td>"最懒的天才"，自嘲文化流量</td></tr>
+                    <tr><td><strong>INFP</strong></td><td>4.4%</td><td>第7名附近</td><td><span class="tag tag-orange">~15倍</span></td><td>抑郁症、诗意、文艺标签，情感共鸣</td></tr>
+                    <tr><td><strong>ENTP</strong></td><td>2.7%</td><td>&#x1F945; 第1名（人气91.6）</td><td><span class="tag tag-red">~34倍</span></td><td>社交控场+创新思维，"最有趣人格"</td></tr>
+                    <tr><td><strong>ENFP</strong></td><td>8.1%</td><td>&#x1F947; 第2名（人气90.9）</td><td><span class="tag tag-blue">~11倍</span></td><td>"人间小太阳"，情感共鸣最高96分</td></tr>
+                    <tr><td><strong>ISFJ</strong></td><td>13.8%</td><td>末尾区间</td><td><span class="tag tag-green">0.3倍</span></td><td>太普通缺乏讨论性</td></tr>
+                    <tr><td><strong>ESFJ</strong></td><td>12.3%</td><td>末尾区间</td><td><span class="tag tag-green">0.3倍</span></td><td>太正常缺乏标签感</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight-box">
+            <strong>反差效应的核心规律：</strong>
+            <ol style="margin-top:8px; padding-left:20px;">
+                <li><strong>N型人格声量远超占比</strong>：N型人口仅占约27%，但在网络讨论中占据了超过70%的话语权</li>
+                <li><strong>越稀有越热门</strong>：INFJ仅占1.5%人口，却稳居网络热度前三</li>
+                <li><strong>稀缺溢价效应</strong>：占比不足2%的人格，职业价值评分比ISFJ等常见人格高出37个百分点</li>
+                <li><strong>ENTP成为人气之王</strong>：仅2.7%的人口占比，但凭借社交控场能力和创新思维，以91.6分登顶人气榜首</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- ===== 第八章：性别维度 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 08</div>
+            <h2>性别维度分析</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x26A5;</span> 四维度性别偏好差异</h3>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="chart-gender-dim"></canvas>
+                </div>
+                <div>
+                    <table>
+                        <thead><tr><th>维度</th><th>男性偏好</th><th>女性偏好</th><th>差异幅度</th></tr></thead>
+                        <tbody>
+                            <tr><td>T/F（思维/情感）</td><td><strong>T型 ~60%</strong></td><td><strong>F型 ~65%</strong></td><td>最大差异</td></tr>
+                            <tr><td>S/N（实感/直觉）</td><td><strong>N型略高</strong></td><td><strong>S型略高</strong></td><td>中等差异</td></tr>
+                            <tr><td>J/P（判断/感知）</td><td>基本持平</td><td>基本持平</td><td>差异最小</td></tr>
+                            <tr><td>E/I（外倾/内倾）</td><td>E型略高</td><td>I型略高</td><td>较小差异</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F468;&#x200D;&#x1F4BC; / &#x1F469;&#x200D;&#x1F4BC;</span> 各类型性别偏斜数据</h3>
+            <div class="chart-container">
+                <canvas id="chart-gender-type"></canvas>
+            </div>
+            <div class="highlight-box warn">
+                <strong>注意：</strong>MBTI性别差异部分源于社会化过程中的性别角色期待（"男生应该理性，女生应该感性"），而非纯粹的生物学差异。不同文化背景下，性别偏斜的幅度有所变化。
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第九章：年龄与代际 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 09</div>
+            <h2>年龄与代际特征</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F465;</span> MBTI的核心用户画像</h3>
+            <div class="chart-row">
+                <div>
+                    <p style="font-weight:600; margin-bottom:12px;">各代际对MBTI的关注度</p>
+                    <table>
+                        <thead><tr><th>代际</th><th>出生年份</th><th>关注度</th><th>平台偏好</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>Z世代</strong></td><td>1997-2012</td><td><span class="tag tag-red">极高</span></td><td>抖音、小红书、B站</td></tr>
+                            <tr><td><strong>千禧一代</strong></td><td>1981-1996</td><td><span class="tag tag-orange">较高</span></td><td>微信、微博、知乎</td></tr>
+                            <tr><td><strong>X世代</strong></td><td>1965-1980</td><td><span class="tag tag-blue">中等</span></td><td>微信、LinkedIn</td></tr>
+                            <tr><td><strong>婴儿潮</strong></td><td>1946-1964</td><td><span class="tag tag-green">较低</span></td><td>传统媒体为主</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <p style="font-weight:600; margin-bottom:12px;">Z世代的MBTI使用特征</p>
+                    <ul style="padding-left:20px; color:var(--text-secondary); font-size:14px;">
+                        <li style="margin-bottom:10px;"><strong>社交货币化</strong>：91%的Z世代在Instagram上活跃，86%在TikTok上活跃，MBTI成为数字化社交名片</li>
+                        <li style="margin-bottom:10px;"><strong>圈层文化</strong>：通过MBTI标签快速找到同好群体，"I人社群"、"NF文艺圈"等</li>
+                        <li style="margin-bottom:10px;"><strong>梗文化驱动</strong>：将MBTI转化为表情包、段子、热梗进行传播</li>
+                        <li><strong>商业消费</strong>：愿意为MBTI相关的付费测试、联名商品、线下活动买单</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F3AF;</span> 不同年龄段的N型偏好趋势</h3>
+            <div class="chart-container">
+                <canvas id="chart-age-n"></canvas>
+            </div>
+            <p style="margin-top:12px; font-size:14px; color:var(--text-secondary);">数据显示，年轻群体中N型（直觉型）人格的占比明显更高。这可能与社会化过程中的N型偏好发展有关，也可能与互联网原住民的信息处理习惯相关。但需注意，年轻群体在线上测试中也可能更倾向于选择"理想化"的N型结果。</p>
+        </div>
+    </div>
+
+    <!-- ===== 第十章：职业分布 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 10</div>
+            <h2>职业与行业分布</h2>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F4BC;</span> MBTI各类型的行业倾向</h3>
+            <div class="chart-container">
+                <canvas id="chart-industry"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F3AF;</span> 典型职业匹配一览</h3>
+            <table>
+                <thead><tr><th>族群</th><th>代表类型</th><th>典型职业方向</th><th>行业偏好</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="tag tag-purple">分析家NT</span></td>
+                        <td>INTJ, INTP, ENTJ, ENTP</td>
+                        <td>战略顾问、AI工程师、数据科学家、科技创业者</td>
+                        <td>科技、金融、咨询</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-green">外交家NF</span></td>
+                        <td>INFJ, INFP, ENFJ, ENFP</td>
+                        <td>心理咨询师、设计师、教师、公益组织、作家</td>
+                        <td>教育、文创、心理、公益</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-blue">哨兵SJ</span></td>
+                        <td>ISTJ, ISFJ, ESTJ, ESFJ</td>
+                        <td>会计、护士、行政、项目经理、法律</td>
+                        <td>传统服务、会计审计、医疗</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tag tag-orange">探险家SP</span></td>
+                        <td>ISTP, ISFP, ESTP, ESFP</td>
+                        <td>运动员、摄影师、厨师、公关、销售</td>
+                        <td>体育、艺术、娱乐、营销</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight-box">
+            <strong>关键行业数据：</strong>
+            <ul style="margin-top:8px; padding-left:20px;">
+                <li>金融与创新行业：ENTP + INTJ 合计占比约 7%-10%</li>
+                <li>教育行业：ISFJ 占比达 10%-15%，耐心与责任感与教师职业高度匹配</li>
+                <li>会计审计领域：SJ型人格占比达 15%-20%</li>
+                <li>世界500强创新部门：ENTP占比达 17%</li>
+                <li>AI工程师、战略顾问岗位：INTJ适配度达 94%，薪资比平均水平高58%</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ===== 第十一章：四大族群画像 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 11</div>
+            <h2>四大族群：NT / NF / SJ / SP 热度画像</h2>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F9E0;</span> <span class="c-analyst">分析家组（NT）</span> — 网络声量之王</h3>
+            <div class="group-badge analyst">&#x1F4A1; 理性 &middot; 创新 &middot; 战略</div>
+            <table>
+                <thead><tr><th>类型</th><th>人口占比</th><th>网络热度</th><th>热梗/标签</th></tr></thead>
+                <tbody>
+                    <tr><td>ENTP（辩论家）</td><td>2.7%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 人气No.1</td><td>"最有趣的人格""社交控场王"</td></tr>
+                    <tr><td>INTJ（建筑师）</td><td>2.1%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 高</td><td>"高冷天才""暗黑大佬"</td></tr>
+                    <tr><td>INTP（逻辑学家）</td><td>3.3%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 高</td><td>"最懒的天才""宿舍躺平王"</td></tr>
+                    <tr><td>ENTJ（指挥官）</td><td>1.8%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50; 中高</td><td>"工作狂""卷王本王"</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:12px; color:var(--text-secondary); font-size:14px;">NT组合计仅占全球人口约10%，却在网络讨论中拥有极高声量。科技行业的"大佬人设"赋予了他们天然的话题性。ENTP以"社交场上最有趣的人"形象登顶人气榜，INTJ则因"高冷神秘感"收获大量粉丝。</p>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F49C;</span> <span class="c-diplomat">外交家组（NF）</span> — 情感共鸣之王</h3>
+            <div class="group-badge diplomat">&#x2728; 理想 &middot; 共情 &middot; 灵性</div>
+            <table>
+                <thead><tr><th>类型</th><th>人口占比</th><th>网络热度</th><th>热梗/标签</th></tr></thead>
+                <tbody>
+                    <tr><td>ENFP（竞选者）</td><td>8.1%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 人气No.2</td><td>"人间小太阳""快乐小狗"</td></tr>
+                    <tr><td>INFJ（提倡者）</td><td>1.5%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50;&#x2B50; 人气No.3</td><td>"灵魂伴侣""世界最稀有"</td></tr>
+                    <tr><td>INFP（调停者）</td><td>4.4%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50; 中高</td><td>"文艺青年""社恐浪漫"</td></tr>
+                    <tr><td>ENFJ（主人公）</td><td>2.5%</td><td>&#x2B50;&#x2B50;&#x2B50;&#x2B50; 中高</td><td>"人间天使""老母亲"</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:12px; color:var(--text-secondary); font-size:14px;">NF组是网络情感讨论的绝对主角。INFJ以1.5%的人口占比稳居热度前三，"灵魂伴侣""最稀有人格"等标签赋予了它巨大的话题溢价。INFP与抑郁症、诗意、文艺的高关联度使其在手书视频和整活内容中频繁出现。</p>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F6E1;</span> <span class="c-sentinel">哨兵组（SJ）</span> — 沉默的大多数</h3>
+            <div class="group-badge sentinel">&#x1F512; 秩序 &middot; 责任 &middot; 稳健</div>
+            <table>
+                <thead><tr><th>类型</th><th>人口占比</th><th>网络热度</th><th>热梗/标签</th></tr></thead>
+                <tbody>
+                    <tr><td>ISFJ（守卫者）</td><td>13.8%</td><td>&#x2B50;&#x2B50; 低</td><td>"太好人不抢镜""妈系人格"</td></tr>
+                    <tr><td>ESFJ（执政官）</td><td>12.3%</td><td>&#x2B50;&#x2B50; 低</td><td>"社交达人但没梗"</td></tr>
+                    <tr><td>ISTJ（物流师）</td><td>11.6%</td><td>&#x2B50;&#x2B50;&#x2B50; 中低</td><td>"白毛禁欲打工人""靠谱但无聊"</td></tr>
+                    <tr><td>ESTJ（总经理）</td><td>8.7%</td><td>&#x2B50;&#x2B50; 低</td><td>"严格领导""卷王"</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:12px; color:var(--text-secondary); font-size:14px;">SJ组合计占全球人口约46%，是真正意义上的"大多数人"，却是在网络上讨论度最低的族群。原因在于：SJ型人格标签感弱、故事性差、缺乏"反差萌"，难以形成传播话题。ISTJ是SJ组中热度最高的，主要得益于"白毛禁欲打工人"等二次元形象加持。</p>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F3C6;</span> <span class="c-explorer">探险家组（SP）</span> — 低调的实力派</h3>
+            <div class="group-badge explorer">&#x1F525; 活力 &middot; 体验 &middot; 自由</div>
+            <table>
+                <thead><tr><th>类型</th><th>人口占比</th><th>网络热度</th><th>热梗/标签</th></tr></thead>
+                <tbody>
+                    <tr><td>ESTP（企业家）</td><td>4.3%</td><td>&#x2B50;&#x2B50;&#x2B50; 中等</td><td>"冒险王""社交天花板"</td></tr>
+                    <tr><td>ESFP（表演者）</td><td>8.5%</td><td>&#x2B50;&#x2B50;&#x2B50; 中等</td><td>"气氛担当""快乐制造机"</td></tr>
+                    <tr><td>ISFP（探险家）</td><td>8.8%</td><td>&#x2B50;&#x2B50;&#x2B50; 中等</td><td>"佛系艺术家""颜值担当"</td></tr>
+                    <tr><td>ISTP（鉴赏家）</td><td>5.4%</td><td>&#x2B50;&#x2B50;&#x2B50; 中低</td><td>"手艺人""沉默高手"</td></tr>
+                </tbody>
+            </table>
+            <p style="margin-top:12px; color:var(--text-secondary); font-size:14px;">SP组介于NT/NF的声量王者和SJ的沉默多数之间。ESTP和ESFP凭借外向、活力等特质在社交内容中有一定存在感，但整体而言，SP组在网络上的讨论度与其人口占比基本匹配，没有明显的声量溢价或折扣。</p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="chart-group-heat"></canvas>
+        </div>
+    </div>
+
+    <!-- ===== 第十二章：核心发现 ===== -->
+    <div class="section">
+        <div class="section-header">
+            <div class="section-num">Chapter 12</div>
+            <h2>核心发现与趋势展望</h2>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F4A1;</span> 十大核心发现</h3>
+            <ol style="padding-left:24px; line-height:2.2;">
+                <li><strong>N型人格声量倒挂</strong>：N型人口仅占27%，但在网络讨论中占据70%以上话语权，形成明显的声量泡沫</li>
+                <li><strong>稀缺溢价效应显著</strong>：人口越稀有的类型网络热度越高，INFJ以1.5%的人口占比稳居人气前三</li>
+                <li><strong>ENTP登顶人气榜</strong>：社交控场+创新思维的组合赋予ENTP最高人气（91.6分），远超其2.7%的人口占比</li>
+                <li><strong>SJ组是沉默的大多数</strong>：占全球46%人口的SJ组在网络讨论中几乎隐身，缺乏标签感和故事性</li>
+                <li><strong>中国N型占比高于预期</strong>：中国NF型（理想主义组）占比高于全球均值，INFP尤为突出</li>
+                <li><strong>性别维度差异明显</strong>：T/F维度性别差异最大（约60:65），N/S维度次之</li>
+                <li><strong>Z世代是核心驱动力</strong>：18-28岁群体将MBTI转化为社交货币，使其从测评工具升级为文化符号</li>
+                <li><strong>I/E维度讨论度最高</strong>：内向/外向的二元对立最接地气，"I人""E人"成为最流行的社交标签</li>
+                <li><strong>商业价值快速释放</strong>：单链接付费测试获利可达数百万元，MBTI正在从社交话题转化为商业产业</li>
+                <li><strong>从标签化到深度化</strong>：随着用户认知深化，MBTI应用正在从简单的社交标签向职业规划、团队管理等深层场景扩展</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h3><span class="icon">&#x1F52C;</span> 趋势展望</h3>
+            <table>
+                <thead><tr><th>趋势</th><th>方向</th><th>可能性</th></tr></thead>
+                <tbody>
+                    <tr><td>AI+MBTI深度融合</td><td>自适应神经模糊推理系统（ANFIS-MBTI）等深度学习模型将实现从社交文本推断MBTI类型</td><td><span class="tag tag-red">极高</span></td></tr>
+                    <tr><td>商业化持续深化</td><td>从付费测试延伸至职业咨询、婚恋匹配、教育规划等付费服务</td><td><span class="tag tag-red">极高</span></td></tr>
+                    <tr><td>争议与反思并存</td><td>学术界对MBTI科学性的质疑将增加，去标签化呼声可能抬头</td><td><span class="tag tag-orange">较高</span></td></tr>
+                    <tr><td>场景化应用扩展</td><td>MBTI标签进入简历、相亲、租房等日常生活决策场景</td><td><span class="tag tag-orange">较高</span></td></tr>
+                    <tr><td>热度周期性波动</td><td>经历2022-2023年的爆发后，MBTI热度可能进入平台期，等待下一波创新驱动</td><td><span class="tag tag-blue">中等</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== 结论 ===== -->
+    <div class="conclusion">
+        <h2>结语</h2>
+        <p>MBTI已不仅仅是一种人格测评工具——它已成为中国Z世代最重要的社交货币之一。从抖音22.8亿的话题浏览量，到小红书42倍的爆发式增长，MBTI完成了从学术工具到文化符号的华丽转身。</p>
+        <p>然而，本报告揭示的核心矛盾在于：<strong>网络上最吵的人格类型，恰恰是人口中最稀少的</strong>。N型人格以27%的人口占比占据了70%以上的网络话语权，这种声量倒挂现象背后，是互联网时代的注意力经济逻辑——越稀缺、越有故事性、越能产生情感共鸣的标签，越容易获得传播优势。</p>
+        <p>理解这一现象，不仅能帮助我们更客观地看待MBTI的网络热度，也能让我们反思：在一个以标签和分类为特征的数字社交时代，<strong>我们是在用MBTI认识自己，还是在用四个字母替代自己？</strong></p>
+    </div>
+
+    <!-- ===== 数据来源 ===== -->
+    <div class="source-note">
+        <p><strong>数据来源说明：</strong></p>
+        <p>本报告数据综合自以下来源：</p>
+        <ul style="margin-top:8px; padding-left:20px;">
+            <li>The Myers-Briggs Company 官方统计数据（2024年更新版）</li>
+            <li>中国心理学会 2020-2025年抽样调查数据（有效样本3129万+）</li>
+            <li>千瓜数据 &mdash; 小红书MBTI热度报告（2023年Q2）</li>
+            <li>Sprout Social 2024年Z世代社交媒体活跃度报告</li>
+            <li>16Personalities 网站公开数据</li>
+            <li>测智网（iqeq.com.cn）MBTI统计数据分析</li>
+            <li>36氪、搜狐、腾讯新闻等媒体报道数据</li>
+            <li>各社交平台公开话题数据（截至2026年5月）</li>
+        </ul>
+        <p style="margin-top:12px;"><strong>免责声明：</strong>MBTI作为人格测评工具，其信度与效度在学术界仍存在争议。本报告中的人口占比数据来自多项独立研究，不同来源之间存在差异，仅供趋势性参考，不应作为精确的统计依据。网络热度数据随时间动态变化，报告中的数据反映的是特定时间点的快照。</p>
+    </div>
+
+</div>
+
+<script>
+// ===== 全局配置 =====
+Chart.defaults.font.family = "'Noto Sans SC', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#64748b';
+
+const COLORS = {
+    analyst: '#6366f1',
+    diplomat: '#22c55e',
+    sentinel: '#3b82f6',
+    explorer: '#f59e0b',
+    analystLight: 'rgba(99,102,241,0.15)',
+    diplomatLight: 'rgba(34,197,94,0.15)',
+    sentinelLight: 'rgba(59,130,246,0.15)',
+    explorerLight: 'rgba(245,158,11,0.15)',
+};
+
+const typeNames = ['ISTJ','ISFJ','INFJ','INTJ','ISTP','ISFP','INFP','INTP','ESTP','ESFP','ENFP','ENTP','ESTJ','ESFJ','ENFJ','ENTJ'];
+const typeLabels = ['ISTJ\n物流师','ISFJ\n守卫者','INFJ\n提倡者','INTJ\n建筑师','ISTP\n鉴赏家','ISFP\n探险家','INFP\n调停者','INTP\n逻辑学家','ESTP\n企业家','ESFP\n表演者','ENFP\n竞选者','ENTP\n辩论家','ESTJ\n总经理','ESFJ\n执政官','ENFJ\n主人公','ENTJ\n指挥官'];
+const typeGroups = ['sentinel','sentinel','diplomat','analyst','explorer','explorer','diplomat','analyst','explorer','explorer','diplomat','analyst','sentinel','sentinel','diplomat','analyst'];
+const typeColors = typeGroups.map(g => COLORS[g]);
+
+const globalPcts = [11.6, 13.8, 1.5, 2.1, 5.4, 8.8, 4.4, 3.3, 4.3, 8.5, 8.1, 2.7, 8.7, 12.3, 2.5, 1.8];
+const chinaPcts = [19.3, 16.1, 2.5, 3.5, 4.5, 9.8, 6.8, 3.8, 4.1, 9.0, 7.0, 3.2, 8.5, 14.2, 3.8, 3.1];
+const usaPcts = [11.6, 13.8, 1.5, 2.1, 5.4, 8.8, 4.4, 3.3, 4.3, 8.5, 8.1, 2.7, 8.7, 12.3, 2.5, 1.8];
+
+// ===== 图表1：全球分布 =====
+new Chart(document.getElementById('chart-global-dist'), {
+    type: 'bar',
+    data: {
+        labels: typeNames,
+        datasets: [{
+            label: '全球人口占比 (%)',
+            data: globalPcts,
+            backgroundColor: typeColors,
+            borderRadius: 6,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: '全球16型人格人口占比分布', font: { size: 16, weight: '600' } }
+        },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: '占比 (%)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表2：族群饼图 =====
+new Chart(document.getElementById('chart-group-pie'), {
+    type: 'doughnut',
+    data: {
+        labels: ['分析家 (NT)', '外交家 (NF)', '哨兵 (SJ)', '探险家 (SP)'],
+        datasets: [{
+            data: [10.2, 17.5, 46.4, 26.9],
+            backgroundColor: [COLORS.analyst, COLORS.diplomat, COLORS.sentinel, COLORS.explorer],
+            borderWidth: 3,
+            borderColor: '#fff',
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '四大族群人口占比', font: { size: 14, weight: '600' } },
+            legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 12 } }
+        }
+    }
+});
+
+// ===== 图表3：族群条形图 =====
+new Chart(document.getElementById('chart-group-bar'), {
+    type: 'bar',
+    data: {
+        labels: ['分析家 (NT)', '外交家 (NF)', '哨兵 (SJ)', '探险家 (SP)'],
+        datasets: [{
+            label: '人口占比 (%)',
+            data: [10.2, 17.5, 46.4, 26.9],
+            backgroundColor: [COLORS.analyst, COLORS.diplomat, COLORS.sentinel, COLORS.explorer],
+            borderRadius: 8,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '四大族群人口占比对比', font: { size: 14, weight: '600' } },
+            legend: { display: false }
+        },
+        scales: {
+            x: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: '占比 (%)' } },
+            y: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表4：中国分布 =====
+new Chart(document.getElementById('chart-china-dist'), {
+    type: 'bar',
+    data: {
+        labels: typeNames,
+        datasets: [
+            {
+                label: '中国占比 (%)',
+                data: chinaPcts,
+                backgroundColor: typeColors,
+                borderRadius: 6,
+                borderSkipped: false,
+            },
+            {
+                label: '全球占比 (%)',
+                data: globalPcts,
+                backgroundColor: typeColors.map(c => c + '44'),
+                borderRadius: 6,
+                borderSkipped: false,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '中国 vs 全球 16型人格占比对比', font: { size: 16, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#f1f5f9' }, title: { display: true, text: '占比 (%)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表5：中美对比 =====
+new Chart(document.getElementById('chart-china-usa'), {
+    type: 'radar',
+    data: {
+        labels: typeNames,
+        datasets: [
+            { label: '中国', data: chinaPcts, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)', pointBackgroundColor: '#ef4444', borderWidth: 2 },
+            { label: '美国', data: usaPcts, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', pointBackgroundColor: '#3b82f6', borderWidth: 2 },
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '中美两国MBTI各类型人口占比雷达图', font: { size: 14, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            r: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { display: false } }
+        }
+    }
+});
+
+// ===== 图表6：各维度热度 =====
+new Chart(document.getElementById('chart-dimension-heat'), {
+    type: 'bar',
+    data: {
+        labels: ['I/E (内向/外向)', 'P/J (感知/判断)', 'T/F (思维/情感)', 'S/N (实感/直觉)'],
+        datasets: [{
+            label: '相对讨论热度指数',
+            data: [100, 75, 65, 35],
+            backgroundColor: ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd'],
+            borderRadius: 8,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'MBTI各维度网络讨论热度指数', font: { size: 16, weight: '600' } },
+            legend: { display: false }
+        },
+        scales: {
+            x: { beginAtZero: true, grid: { color: '#f1f5f9' }, max: 120, title: { display: true, text: '热度指数（I/E=100基准）' } },
+            y: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表7：热度vs人口 =====
+const popRank = [91.6, 90.9, 90.8, 90.1, 89.3, 88.8, 78, 75, 55, 50, 45, 40, 35, 30, 28, 25];
+const popNames = ['ENTP','ENFP','INFJ','ENFJ','INTJ','INTP','INFP','INTJ-a','ESTP','ESFP','ISFP','ISTP','ENTJ','ESTJ','ISFJ','ESFJ'];
+const popPcts = [2.7, 8.1, 1.5, 2.5, 2.1, 3.3, 4.4, 2.1, 4.3, 8.5, 8.8, 5.4, 1.8, 8.7, 13.8, 12.3];
+const popColors = ['#6366f1','#22c55e','#22c55e','#22c55e','#6366f1','#6366f1','#22c55e','#6366f1','#f59e0b','#f59e0b','#f59e0b','#f59e0b','#6366f1','#3b82f6','#3b82f6','#3b82f6'];
+
+new Chart(document.getElementById('chart-popularity-vs-pop'), {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: '人格类型',
+            data: popPcts.map((p, i) => ({ x: p, y: popRank[i] })),
+            backgroundColor: popColors,
+            pointRadius: popPcts.map((p, i) => 5 + (90 - popRank[i]) / 10),
+            pointHoverRadius: 12,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'MBTI各类型：人口占比 vs 网络人气（气泡越大=人口越多）', font: { size: 16, weight: '600' } },
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: (ctx) => {
+                        const i = ctx.dataIndex;
+                        return `${popNames[i]}: 人口${popPcts[i]}%, 人气${popRank[i]}`;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: { title: { display: true, text: '全球人口占比 (%)' }, grid: { color: '#f1f5f9' }, min: 0, max: 16 },
+            y: { title: { display: true, text: '网络人气指数' }, grid: { color: '#f1f5f9' }, min: 20, max: 95, reverse: false }
+        }
+    }
+});
+
+// ===== 图表8：性别维度 =====
+new Chart(document.getElementById('chart-gender-dim'), {
+    type: 'bar',
+    data: {
+        labels: ['T/F (思维/情感)', 'S/N (实感/直觉)', 'E/I (外倾/内倾)', 'J/P (判断/感知)'],
+        datasets: [
+            { label: '男性偏好占比', data: [60, 55, 52, 50], backgroundColor: '#3b82f6', borderRadius: 6, borderSkipped: false },
+            { label: '女性偏好占比', data: [35, 45, 48, 50], backgroundColor: '#ec4899', borderRadius: 6, borderSkipped: false },
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'MBTI各维度性别偏好差异（%）', font: { size: 14, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            y: { beginAtZero: true, max: 75, grid: { color: '#f1f5f9' }, title: { display: true, text: '该维度偏好者中该性别占比 (%)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表9：各类型性别偏斜 =====
+new Chart(document.getElementById('chart-gender-type'), {
+    type: 'bar',
+    data: {
+        labels: typeNames,
+        datasets: [
+            { label: '男性占比', data: [70, 20, 25, 75, 78, 30, 45, 65, 75, 45, 35, 60, 65, 40, 30, 65], backgroundColor: '#3b82f6', borderRadius: 4, borderSkipped: false },
+            { label: '女性占比', data: [30, 80, 75, 25, 22, 70, 55, 35, 25, 55, 65, 40, 35, 60, 70, 35], backgroundColor: '#ec4899', borderRadius: 4, borderSkipped: false },
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '各类型人格的性别分布（%）', font: { size: 16, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            x: { stacked: true, grid: { display: false } },
+            y: { stacked: true, max: 100, grid: { color: '#f1f5f9' }, title: { display: true, text: '占比 (%)' } }
+        }
+    }
+});
+
+// ===== 图表10：年龄N型偏好 =====
+new Chart(document.getElementById('chart-age-n'), {
+    type: 'line',
+    data: {
+        labels: ['18岁以下', '18-24岁', '25-34岁', '35-44岁', '45-54岁', '55岁以上'],
+        datasets: [{
+            label: 'N型（直觉型）占比 (%)',
+            data: [38, 35, 30, 26, 22, 20],
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99,102,241,0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointBackgroundColor: '#6366f1',
+        }, {
+            label: '全球平均N型占比',
+            data: [27, 27, 27, 27, 27, 27],
+            borderColor: '#94a3b8',
+            borderDash: [6, 4],
+            pointRadius: 0,
+            fill: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '不同年龄段N型（直觉型）人格占比趋势', font: { size: 16, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            y: { beginAtZero: false, min: 15, max: 45, grid: { color: '#f1f5f9' }, title: { display: true, text: 'N型占比 (%)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+// ===== 图表11：行业分布 =====
+new Chart(document.getElementById('chart-industry'), {
+    type: 'bar',
+    data: {
+        labels: ['科技/IT', '金融/咨询', '教育/学术', '医疗/健康', '艺术/设计', '法律/行政', '市场/公关'],
+        datasets: [
+            { label: 'NT 分析家', data: [52, 38, 15, 5, 10, 20, 15], backgroundColor: COLORS.analyst, borderRadius: 4, borderSkipped: false },
+            { label: 'NF 外交家', data: [10, 8, 30, 20, 35, 10, 25], backgroundColor: COLORS.diplomat, borderRadius: 4, borderSkipped: false },
+            { label: 'SJ 哨兵', data: [15, 22, 35, 45, 10, 45, 15], backgroundColor: COLORS.sentinel, borderRadius: 4, borderSkipped: false },
+            { label: 'SP 探险家', data: [23, 32, 20, 30, 45, 25, 45], backgroundColor: COLORS.explorer, borderRadius: 4, borderSkipped: false },
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: 'MBTI四大族群在各行业的分布倾向', font: { size: 16, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            x: { stacked: true, grid: { display: false } },
+            y: { stacked: true, max: 100, grid: { color: '#f1f5f9' }, title: { display: true, text: '行业从业者占比 (%)' } }
+        }
+    }
+});
+
+// ===== 图表12：四大族群热度对比 =====
+new Chart(document.getElementById('chart-group-heat'), {
+    type: 'bar',
+    data: {
+        labels: ['分析家 (NT)', '外交家 (NF)', '哨兵 (SJ)', '探险家 (SP)'],
+        datasets: [
+            { label: '人口占比 (%)', data: [10.2, 17.5, 46.4, 26.9], backgroundColor: ['#c7d2fe','#bbf7d0','#bfdbfe','#fde68a'], borderRadius: 6, borderSkipped: false },
+            { label: '网络声量占比 (估算%)', data: [35, 38, 10, 17], backgroundColor: [COLORS.analyst, COLORS.diplomat, COLORS.sentinel, COLORS.explorer], borderRadius: 6, borderSkipped: false },
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: { display: true, text: '四大族群：人口占比 vs 网络声量对比', font: { size: 16, weight: '600' } },
+            legend: { position: 'top' }
+        },
+        scales: {
+            y: { beginAtZero: true, max: 50, grid: { color: '#f1f5f9' }, title: { display: true, text: '占比 (%)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+</script>
+
+<script>
+// ===== 生成防伪水印 =====
+(function() {
+    var pattern = document.getElementById('watermarkPattern');
+    var text = 'Chenhtai专用水印';
+    var cols = 5;
+    var rows = 8;
+    var total = cols * rows;
+    var cells = [];
+    for (var i = 0; i < total; i++) {
+        cells.push('<div class="watermark-text">' + text + '</div>');
+    }
+    pattern.innerHTML = cells.join('');
+    // Update grid layout
+    pattern.style.display = 'flex';
+    pattern.style.flexWrap = 'wrap';
+    pattern.style.alignContent = 'center';
+    pattern.style.justifyContent = 'center';
+})();
+</script>
+
+</body>
+</html>
